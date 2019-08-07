@@ -1,16 +1,21 @@
 import React from 'react';
 import styled from '@emotion/styled'
-import Game from './components/Game'
+import Gameboy from './components/Gameboy'
 
-const Background = styled.section`
-  background: #222;
+const Section = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
 `
 
 function App() {
   return (
-    <Background>
-      <Game />
-    </Background>
+    <Section>
+      <Gameboy />
+    </Section>
   );
 }
 
