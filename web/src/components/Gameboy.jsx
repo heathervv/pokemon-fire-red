@@ -12,6 +12,8 @@ const GameBoy = styled.div`
   border-radius: 15px 15px 170px 170px/15px 15px 35px 35px;
 `
 
+// TODO add "grill" bottom right side
+
 const Gameboy = () => {
   const [active, setActive] = useState(false)
 

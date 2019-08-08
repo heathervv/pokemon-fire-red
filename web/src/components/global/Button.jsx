@@ -6,6 +6,9 @@ const Button = styled.button`
   padding: 0;
   background: none;
   border: none;
+  &:focus {
+    outline: none;
+  }
 `
 
 export { Button }

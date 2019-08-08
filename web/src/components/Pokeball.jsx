@@ -1,19 +1,26 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import styled from '@emotion/styled'
 import { sprites } from '../config'
 import { Button, Image } from './global'
 
-const Pokeball = ({ pokemon }) => (
-  <Button onClick={() => { console.log(`I was clicked, I contain ${pokemon}`)}}>
+const Ball = styled(Button)`
+  width: 20px;
+  height: 20px;
+`
+
+const Pokeball = ({ pokemon, choosePokemon }) => (
+  <Ball onClick={() => choosePokemon(pokemon)}>
     <Image
       src={`${sprites}/items/poke-ball.png`}
       alt="Pokéball containing a Pokémon"
     />
-  </Button>
+  </Ball>
 )
 
 Pokeball.propTypes = {
-  pokemon: PropTypes.number.isRequired
+  pokemon: PropTypes.object.isRequired,
+  choosePokemon: PropTypes.func.isRequired
 }
 
  export default Pokeball

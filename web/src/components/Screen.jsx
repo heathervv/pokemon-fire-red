@@ -16,8 +16,8 @@ const ScreenGlass = styled.div`
 const ScreenWindow = styled.div`
   position: absolute;
   top: 10%;
-  left: 13%;
-  width: 74%;
+  left: 11%;
+  width: 77%;
   height: 70%;
   background: #999;
   border-radius: 3px;
@@ -34,7 +34,7 @@ const Power = styled.div`
   background: #d12a17;
   border-radius: 50%;
   opacity: ${props => props.on ? 1 : .2};
-  transition: opacity .2s ease-in-out;
+  transition: opacity .3s cubic-bezier(0.895, 0.030, 0.685, 0.220);
 `
 
 const Screen = ({ children, power }) => (
