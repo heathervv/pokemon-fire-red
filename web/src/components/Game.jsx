@@ -39,8 +39,13 @@ const Game = ({ turnGameboyOn }) => {
     <Background visible={pokemonStarters.length > 0}>
       <InteractiveSpace>
         {
-          pokemonStarters.map(pokemon => (
-            <Pokeball key={pokemon.id} pokemon={pokemon} choosePokemon={selectPokemon} />
+          pokemonStarters.map((pokemon, i) => (
+            <Pokeball
+              key={pokemon.id}
+              pokemon={pokemon}
+              order={i}
+              choosePokemon={selectPokemon}
+            />
           ))
         }
       </InteractiveSpace>

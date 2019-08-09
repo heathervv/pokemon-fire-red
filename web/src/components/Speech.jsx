@@ -1,7 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from '@emotion/styled'
-import { Paragraph } from './global'
+import { Button, Paragraph } from './global'
+import { choosingStarters } from '../content'
+import { replaceString } from '../helpers'
 
 const Wrapper = styled.div`
   position: absolute;
@@ -34,11 +36,15 @@ const Bubble = styled.div`
   background: rgba(255,255,255,.9);
   border-radius: 14px;
   border: 3px solid #8ce5f5;
-  color: blue;
-  font-family: monospace;
-  text-shadow: 1px 1px 1px #ddd;
-  .name {
-    text-transform: uppercase;
+  button {
+    vertical-align: bottom;
+  }
+  p {
+    text-align: left;
+    font-family: monospace;
+    font-size: 12px;
+    color: blue;
+    text-shadow: 1px 1px 1px #ddd;
   }
 `
 
@@ -63,17 +69,31 @@ const Arrow = styled.span`
   }
 `
 
-// TODO confirmation speech
+// TODO text writing animation
 // TODO choice window
 // TODO success/failure speech
-// TODO Randomize text per pokemon
 
 const Speech = ({ pokemon }) => {
+  const [currentScreen, changeScreen] = useState(0)
+  const copy = choosingStarters(pokemon.order)[currentScreen]
+
   return (
     <Wrapper>
       <Image sprite={pokemon.sprite} />
       <Bubble>
-        <Paragraph>I see! <span className="name">{pokemon.name}</span> is your choice. It's very easy to raise. <Arrow /></Paragraph>
+        <Button onClick={() => changeScreen(currentScreen + 1)}>
+          <Paragraph>
+            {
+              replaceString(
+                copy,
+                [
+                  { a: '{{POKEMON_NAME}}', b: pokemon.name },
+                  { a: '{{POKEMON_TYPE}}', b: pokemon.types[1] }
+                ]
+              )
+            } <Arrow />
+          </Paragraph>
+        </Button>
       </Bubble>
     </Wrapper>
   )

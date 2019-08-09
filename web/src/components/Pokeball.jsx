@@ -9,8 +9,8 @@ const Ball = styled(Button)`
   height: 20px;
 `
 
-const Pokeball = ({ pokemon, choosePokemon }) => (
-  <Ball onClick={() => choosePokemon(pokemon)}>
+const Pokeball = ({ pokemon, order, choosePokemon }) => (
+  <Ball onClick={() => choosePokemon({ order, ...pokemon })}>
     <Image
       src={`${sprites}/items/poke-ball.png`}
       alt="Pokéball containing a Pokémon"
@@ -20,7 +20,12 @@ const Pokeball = ({ pokemon, choosePokemon }) => (
 
 Pokeball.propTypes = {
   pokemon: PropTypes.object.isRequired,
+  order: PropTypes.number,
   choosePokemon: PropTypes.func.isRequired
+}
+
+Pokeball.defaultProps = {
+  order: 0
 }
 
  export default Pokeball
