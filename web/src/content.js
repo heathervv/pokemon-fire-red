@@ -6,7 +6,7 @@ const starterSnippets = [
 
 const starterConfirm = "So, you're claiming the {{POKEMON_TYPE}} POKéMON {{POKEMON_NAME}}?"
 
-const choosingStarters = (index) => ({
+const choosingStarters = (index = 0) => ({
   0: starterSnippets[index],
   1: starterConfirm
 })

@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from '@emotion/styled'
-import { Button, Paragraph } from './global'
+import { Button, Paragraph, Character } from './global'
 import { choosingStarters } from '../content'
-import { replaceString } from '../helpers'
+import { replaceString, wrapEveryLetter } from '../helpers'
 
 const Wrapper = styled.div`
   position: absolute;
@@ -48,7 +48,7 @@ const Bubble = styled.div`
   }
 `
 
-const Arrow = styled.span`
+const Arrow = styled(Character)`
   position: relative;
   display: inline-block;
   width: 0;
@@ -69,30 +69,26 @@ const Arrow = styled.span`
   }
 `
 
-// TODO text writing animation
 // TODO choice window
 // TODO success/failure speech
 
 const Speech = ({ pokemon }) => {
   const [currentScreen, changeScreen] = useState(0)
-  const copy = choosingStarters(pokemon.order)[currentScreen]
+  const areThereAnyScreensLeft = Object.keys(choosingStarters()).length > currentScreen + 1
+  const copy = replaceString(
+    choosingStarters(pokemon.order)[currentScreen],
+    [
+      { a: '{{POKEMON_NAME}}', b: pokemon.name },
+      { a: '{{POKEMON_TYPE}}', b: pokemon.types[1] }
+    ]
+  )
 
   return (
     <Wrapper>
       <Image sprite={pokemon.sprite} />
       <Bubble>
-        <Button onClick={() => changeScreen(currentScreen + 1)}>
-          <Paragraph>
-            {
-              replaceString(
-                copy,
-                [
-                  { a: '{{POKEMON_NAME}}', b: pokemon.name },
-                  { a: '{{POKEMON_TYPE}}', b: pokemon.types[1] }
-                ]
-              )
-            } <Arrow />
-          </Paragraph>
+        <Button onClick={() => changeScreen(areThereAnyScreensLeft ? currentScreen + 1 : currentScreen)}>
+          <Paragraph>{wrapEveryLetter(copy)} <Arrow delay={copy.length} key={currentScreen} /></Paragraph>
         </Button>
       </Bubble>
     </Wrapper>
