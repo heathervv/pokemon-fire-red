@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types'
 import styled from '@emotion/styled'
 
 const Wrapper = styled.div`
@@ -132,18 +133,29 @@ const Button = styled.button`
   }
 `
 
-const Arrows = () => (
-  <Wrapper>
-    <Background />
-    <Arrow position="horizontal">
-      <Button direction="left" />
-      <Button direction="right" />
-    </Arrow>
-    <Arrow position="vertical">
-      <Button direction="up" />
-      <Button direction="down" />
-    </Arrow>
-  </Wrapper>
-)
+class Arrows extends Component {
+  render() {
+    const { refs, onClick } = this.props
+
+    return (
+      <Wrapper>
+        <Background />
+        <Arrow position="horizontal">
+          <Button onClick={() => onClick(refs.left)} ref={refs.left} direction="left" />
+          <Button onClick={() => onClick(refs.right)} ref={refs.right} direction="right" />
+        </Arrow>
+        <Arrow position="vertical">
+          <Button onClick={() => onClick(refs.up)} ref={refs.up} direction="up" />
+          <Button onClick={() => onClick(refs.down)} ref={refs.down} direction="down" />
+        </Arrow>
+      </Wrapper>
+    )
+  }
+}
+
+Arrows.propTypes = {
+  refs: PropTypes.object.isRequired,
+  onClick: PropTypes.func.isRequired
+}
 
 export default Arrows;

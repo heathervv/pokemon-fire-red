@@ -1,8 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import styled from '@emotion/styled'
-import { Button, Paragraph, Character } from './global'
-import { choosingStarters } from '../content'
+import { Button, Paragraph, SpeechText, Character } from './global'
 import { replaceString, wrapEveryLetter } from '../helpers'
 
 const Wrapper = styled.div`
@@ -39,13 +38,6 @@ const Bubble = styled.div`
   button {
     vertical-align: bottom;
   }
-  p {
-    text-align: left;
-    font-family: monospace;
-    font-size: 12px;
-    color: blue;
-    text-shadow: 1px 1px 1px #ddd;
-  }
 `
 
 const Arrow = styled(Character)`
@@ -72,23 +64,35 @@ const Arrow = styled(Character)`
 // TODO choice window
 // TODO success/failure speech
 
-const Speech = ({ pokemon }) => {
+const Speech = ({ pokemon, content, yesNoControl }) => {
   const [currentScreen, changeScreen] = useState(0)
-  const areThereAnyScreensLeft = Object.keys(choosingStarters()).length > currentScreen + 1
+  const areThereAnyScreensLeft = Object.keys(content()).length > currentScreen + 1
   const copy = replaceString(
-    choosingStarters(pokemon.order)[currentScreen],
+    content(pokemon.order)[currentScreen],
     [
       { a: '{{POKEMON_NAME}}', b: pokemon.name },
       { a: '{{POKEMON_TYPE}}', b: pokemon.types[1] }
     ]
   )
 
+  const triggerCopyChange = useCallback((forceChange) => {
+    if (yesNoControl || forceChange) {
+      changeScreen(areThereAnyScreensLeft ? currentScreen + 1 : currentScreen)
+    }
+  }, [areThereAnyScreensLeft, currentScreen, yesNoControl])
+
+  useEffect(() => {
+    triggerCopyChange(yesNoControl)
+  }, [triggerCopyChange, yesNoControl])
+
   return (
     <Wrapper>
       <Image sprite={pokemon.sprite} />
       <Bubble>
-        <Button onClick={() => changeScreen(areThereAnyScreensLeft ? currentScreen + 1 : currentScreen)}>
-          <Paragraph>{wrapEveryLetter(copy)} <Arrow delay={copy.length} key={currentScreen} /></Paragraph>
+        <Button onClick={() => triggerCopyChange(true)}>
+          <SpeechText>
+            <Paragraph>{wrapEveryLetter(copy)} <Arrow delay={copy.length} key={currentScreen} /></Paragraph>
+          </SpeechText>
         </Button>
       </Bubble>
     </Wrapper>
@@ -99,7 +103,9 @@ Speech.propTypes = {
   pokemon: PropTypes.shape({
     sprite: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired
-  }).isRequired
+  }).isRequired,
+  content: PropTypes.func.isRequired,
+  yesNoControl: PropTypes.bool
 }
 
 export default Speech

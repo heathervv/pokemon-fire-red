@@ -4,6 +4,7 @@ import styled from '@emotion/styled'
 import { getStarters } from '../apiClient'
 import Pokeball from './Pokeball'
 import Speech from './Speech'
+import { choosingStarters } from '../content'
 
 import background from'../images/lab_inside.jpg';
 
@@ -23,7 +24,7 @@ const InteractiveSpace = styled.div`
   right: 17%;
 `
 
-const Game = ({ turnGameboyOn }) => {
+const Game = ({ turnGameboyOn, yesNoControl }) => {
   const [pokemonStarters, setPokemonStarters] = useState([])
   const [selectedPokemon, selectPokemon] = useState(null)
 
@@ -51,14 +52,19 @@ const Game = ({ turnGameboyOn }) => {
       </InteractiveSpace>
       {
         selectedPokemon &&
-        <Speech pokemon={selectedPokemon} />
+        <Speech
+          pokemon={selectedPokemon}
+          content={choosingStarters}
+          yesNoControl={yesNoControl}
+        />
       }
     </Background>
   )
 }
 
 Game.propTypes = {
-  turnGameboyOn: PropTypes.func.isRequired
+  turnGameboyOn: PropTypes.func.isRequired,
+  yesNoControl: PropTypes.bool
 }
 
 export default Game
