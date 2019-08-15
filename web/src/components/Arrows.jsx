@@ -69,6 +69,7 @@ const Arrow = styled.div`
     width: ${props => props.position === 'vertical' ? '100%' : '34%'};
     height: ${props => props.position === 'vertical' ? '34%' : '100%'};
 
+    &.focus,
     &:active {
       background: ${props => props.position === 'vertical'
         ? 'linear-gradient(to bottom, rgba(0, 0, 0, 1) 0%,rgba(34, 34, 34, 1) 100%)'
@@ -135,18 +136,18 @@ const Button = styled.button`
 
 class Arrows extends Component {
   render() {
-    const { refs, onClick } = this.props
+    const { refs, onClick, focusOnArrow } = this.props
 
     return (
       <Wrapper>
         <Background />
         <Arrow position="horizontal">
-          <Button onClick={() => onClick(refs.left, 'LEFT')} ref={refs.left} direction="left" />
-          <Button onClick={() => onClick(refs.right, 'RIGHT')} ref={refs.right} direction="right" />
+          <Button onClick={() => onClick(refs.left, 'LEFT')} ref={refs.left} direction="left" className={focusOnArrow === refs.left ? 'focus' : ''} />
+          <Button onClick={() => onClick(refs.right, 'RIGHT')} ref={refs.right} direction="right" className={focusOnArrow === refs.right ? 'focus' : ''} />
         </Arrow>
         <Arrow position="vertical">
-          <Button onClick={() => onClick(refs.up, 'UP')} ref={refs.up} direction="up" />
-          <Button onClick={() => onClick(refs.down, 'DOWN')} ref={refs.down} direction="down" />
+          <Button onClick={() => onClick(refs.up, 'UP')} ref={refs.up} direction="up" className={focusOnArrow === refs.up ? 'focus' : ''} />
+          <Button onClick={() => onClick(refs.down, 'DOWN')} ref={refs.down} direction="down" className={focusOnArrow === refs.down ? 'focus' : ''} />
         </Arrow>
       </Wrapper>
     )
@@ -155,7 +156,12 @@ class Arrows extends Component {
 
 Arrows.propTypes = {
   refs: PropTypes.object.isRequired,
-  onClick: PropTypes.func.isRequired
+  onClick: PropTypes.func.isRequired,
+  focusOnArrow: PropTypes.object
+}
+
+Arrows.defaultProps = {
+  focusOnArrow: null
 }
 
 export default Arrows;

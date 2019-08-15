@@ -25,9 +25,12 @@ const Button = styled.button`
   text-align: left;
   font-size: 25px;
   cursor: pointer;
+
+  &.focus,
   &:active {
     background: #000;
   }
+
   &:focus {
     outline: none;
   }
@@ -71,6 +74,10 @@ class Controls extends Component {
   constructor() {
     super()
 
+    this.state = {
+      focusedElement: null
+    }
+
     this.aButton = React.createRef()
     this.bButton = React.createRef()
     this.upArrow = React.createRef()
@@ -103,6 +110,12 @@ class Controls extends Component {
   }
 
   triggerControl = (ref, direction = null) => {
+    this.setState({ focusedElement: ref }, () => {
+      setTimeout(() => {
+        this.setState({ focusedElement: null })
+      }, 100)
+    })
+
     if (ref === this.aButton || ref === this.bButton) {
       this.props.setYesNoControl(ref === this.aButton)
     }
@@ -113,6 +126,8 @@ class Controls extends Component {
   }
 
   render() {
+    const { focusedElement } = this.state
+
     return (
       <Wrapper>
         <Arrows
@@ -123,12 +138,14 @@ class Controls extends Component {
             right: this.rightArrow
           }}
           onClick={this.triggerControl}
+          focusOnArrow={focusedElement}
         />
         <Button
           ref={this.aButton}
           onClick={() => this.triggerControl(this.aButton)}
           top={7}
           right={11}
+          className={focusedElement === this.aButton ? 'focus' : ''}
         >
           A
         </Button>
@@ -137,6 +154,7 @@ class Controls extends Component {
           onClick={() => this.triggerControl(this.bButton)}
           top={24}
           right={27}
+          className={focusedElement === this.bButton ? 'focus' : ''}
         >
           B
         </Button>
