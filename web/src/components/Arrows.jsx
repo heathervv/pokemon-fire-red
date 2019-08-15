@@ -141,12 +141,12 @@ class Arrows extends Component {
       <Wrapper>
         <Background />
         <Arrow position="horizontal">
-          <Button onClick={() => onClick(refs.left)} ref={refs.left} direction="left" />
-          <Button onClick={() => onClick(refs.right)} ref={refs.right} direction="right" />
+          <Button onClick={() => onClick(refs.left, 'LEFT')} ref={refs.left} direction="left" />
+          <Button onClick={() => onClick(refs.right, 'RIGHT')} ref={refs.right} direction="right" />
         </Arrow>
         <Arrow position="vertical">
-          <Button onClick={() => onClick(refs.up)} ref={refs.up} direction="up" />
-          <Button onClick={() => onClick(refs.down)} ref={refs.down} direction="down" />
+          <Button onClick={() => onClick(refs.up, 'UP')} ref={refs.up} direction="up" />
+          <Button onClick={() => onClick(refs.down, 'DOWN')} ref={refs.down} direction="down" />
         </Arrow>
       </Wrapper>
     )

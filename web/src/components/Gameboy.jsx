@@ -16,13 +16,14 @@ const GameBoy = styled.div`
 const Gameboy = () => {
   const [active, setActive] = useState(false)
   const [yesNoControl, setYesNoControl] = useState(null)
+  const [arrowControl, setArrowControl] = useState({ direction: 'UP', count: 0})
 
   return (
     <GameBoy>
       <Screen power={active}>
-        <Game turnGameboyOn={setActive} yesNoControl={yesNoControl} />
+        <Game turnGameboyOn={setActive} yesNoControl={yesNoControl} arrowControl={arrowControl} />
       </Screen>
-      <Controls setYesNoControl={setYesNoControl} />
+      <Controls setYesNoControl={setYesNoControl} setArrowControl={setArrowControl} arrowControl={arrowControl} />
       <Grill />
     </GameBoy>
   );

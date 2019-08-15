@@ -81,27 +81,34 @@ class Controls extends Component {
     this.KEY_VALUES = {
       65: this.aButton,
       66: this.bButton,
-      38: this.upArrow,
-      40: this.downArrow,
-      37: this.leftArrow,
-      39: this.rightArrow
+      38: [this.upArrow, 'UP'],
+      40: [this.downArrow, 'DOWN'],
+      37: [this.leftArrow, 'LEFT'],
+      39: [this.rightArrow, 'RIGHT']
     }
   }
 
   componentDidMount() {
     document.addEventListener('keydown', event => {
       const keyCode = event.keyCode.toString()
+
       if (Object.keys(this.KEY_VALUES).includes(keyCode)) {
-        this.triggerControl(this.KEY_VALUES[keyCode])
+        if (this.KEY_VALUES[keyCode].length > 1) {
+          this.triggerControl(this.KEY_VALUES[keyCode][0], this.KEY_VALUES[keyCode][1])
+        } else {
+          this.triggerControl(this.KEY_VALUES[keyCode])
+        }
       }
     })
   }
 
-  triggerControl = (ref) => {
-    console.log('control has been clicked', ref);
-
+  triggerControl = (ref, direction = null) => {
     if (ref === this.aButton || ref === this.bButton) {
       this.props.setYesNoControl(ref === this.aButton)
+    }
+
+    if (ref !== this.aButton && ref !== this.bButton) {
+      this.props.setArrowControl({ direction, count: this.props.arrowControl.count += 1 })
     }
   }
 
@@ -141,7 +148,9 @@ class Controls extends Component {
 }
 
 Controls.propTypes = {
-  setYesNoControl: PropTypes.func.isRequired
+  setYesNoControl: PropTypes.func.isRequired,
+  setArrowControl: PropTypes.func.isRequired,
+  arrowControl: PropTypes.object.isRequired
 }
 
 export default Controls;

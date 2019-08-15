@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import styled from '@emotion/styled'
 import { getStarters } from '../apiClient'
 import Pokeball from './Pokeball'
+import Player from './Player'
 import Speech from './Speech'
 import { choosingStarters } from '../content'
 
@@ -24,7 +25,7 @@ const InteractiveSpace = styled.div`
   right: 17%;
 `
 
-const Game = ({ turnGameboyOn, yesNoControl }) => {
+const Game = ({ turnGameboyOn, yesNoControl, arrowControl }) => {
   const [pokemonStarters, setPokemonStarters] = useState([])
   const [selectedPokemon, selectPokemon] = useState(null)
 
@@ -50,6 +51,7 @@ const Game = ({ turnGameboyOn, yesNoControl }) => {
           ))
         }
       </InteractiveSpace>
+      <Player move={arrowControl} />
       {
         selectedPokemon &&
         <Speech
@@ -64,7 +66,12 @@ const Game = ({ turnGameboyOn, yesNoControl }) => {
 
 Game.propTypes = {
   turnGameboyOn: PropTypes.func.isRequired,
-  yesNoControl: PropTypes.bool
+  yesNoControl: PropTypes.bool,
+  arrowControl: PropTypes.object.isRequired
+}
+
+Game.defaultProps = {
+  yesNoControl: null
 }
 
 export default Game
