@@ -43,7 +43,17 @@ const DIRECTIONS = {
 }
 
 const Player = ({ move }) => {
-  const [position, moveCharacter] = useState([137, 193])
+  const [initialized, changeInitialization] = useState(false)
+  const [position, moveCharacter] = useState([137, 223])
+
+  useEffect(() => {
+    if (!initialized) {
+      setTimeout(() => {
+        moveCharacter([position[0], 193])
+        changeInitialization(true)
+      }, 500)
+    }
+  }, [initialized])
 
   useEffect(() => {
     DIRECTIONS[move.direction].animate.map((number, i) => {
