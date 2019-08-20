@@ -2,6 +2,8 @@ import React from 'react';
 import styled from '@emotion/styled'
 import Gameboy from './components/Gameboy'
 
+import background from'./images/bg.jpg';
+
 const Section = styled.div`
   display: flex;
   align-items: center;
@@ -9,6 +11,8 @@ const Section = styled.div`
   width: 100%;
   height: 100vh;
   overflow: hidden;
+  background: url(${background}) repeat-x;
+  background-size: auto 100%;
 `
 
 function App() {

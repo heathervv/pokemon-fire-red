@@ -4,13 +4,19 @@ import Game from './Game'
 import Screen from './Screen'
 import Controls from './Controls'
 import Grill from './Grill'
+import { responsive } from './global'
 
 const GameBoy = styled.div`
   position: relative;
-  width: 425px;
-  height: 650px;
+  height: 100vh;
   background: #fdd437;
-  border-radius: 15px 15px 170px 170px/15px 15px 35px 35px;
+
+  ${responsive('small')} {
+    width: 425px;
+    height: 650px;
+    border-radius: 15px 15px 170px 170px/15px 15px 35px 35px;
+    box-shadow: 3px 3px 6px rgba(0,0,0,.4);
+  }
 `
 
 const Gameboy = () => {

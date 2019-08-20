@@ -2,12 +2,17 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types'
 import styled from '@emotion/styled'
 import Arrows from './Arrows'
+import { responsive } from './global'
 
 const Wrapper = styled.div`
-  position: absolute;
-  top: 62%;
+  position: relative;
   width: 100%;
   height: 180px;
+
+  ${responsive('small')} {
+    position: absolute;
+    top: 62%;
+  }
 `
 
 const Button = styled.button`

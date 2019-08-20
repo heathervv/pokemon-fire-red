@@ -5,6 +5,7 @@ import { SpeechText } from './SpeechText'
 import { Character } from './Character'
 import { BorderedBox } from './BorderedBox'
 import { Arrow } from './Arrow'
+import { responsive } from './Responsive'
 
 export {
   Button,
@@ -13,5 +14,6 @@ export {
   SpeechText,
   Character,
   BorderedBox,
-  Arrow
+  Arrow,
+  responsive
 }
