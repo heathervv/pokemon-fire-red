@@ -51,7 +51,7 @@ const Player = ({ move }) => {
       setTimeout(() => {
         moveCharacter([position[0], 193])
         changeInitialization(true)
-      }, 500)
+      }, 1000)
     }
   }, [initialized])
 

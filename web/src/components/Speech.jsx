@@ -1,7 +1,14 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import styled from '@emotion/styled'
-import { Button, Paragraph, SpeechText, Character } from './global'
+import ChoiceBubble from './ChoiceBubble'
+import {
+  Button,
+  Paragraph,
+  SpeechText,
+  Arrow,
+  BorderedBox
+} from './global'
 import { replaceString, wrapEveryLetter } from '../helpers'
 
 const Wrapper = styled.div`
@@ -11,15 +18,12 @@ const Wrapper = styled.div`
   height: 100%;
 `
 
-const Image = styled.div`
+const Image = styled(BorderedBox)`
   position: absolute;
   top: 31px;
   left: 50%;
   height: 100px;
   width: 40%;
-  box-sizing: border-box;
-  border-radius: 3px;
-  border: 3px solid #322975;
   transform: translatex(-50%);
   background: ${props => props.sprite && `url(${props.sprite}) no-repeat center rgba(255,255,255,.9)`};
   background-size: cover;
@@ -37,27 +41,6 @@ const Bubble = styled.div`
   border: 3px solid #8ce5f5;
   button {
     vertical-align: bottom;
-  }
-`
-
-const Arrow = styled(Character)`
-  position: relative;
-  display: inline-block;
-  width: 0;
-  height: 0;
-  border-left: 6px solid transparent;
-  border-right: 6px solid transparent;
-  border-top: 7px solid #222;
-
-  &:before {
-    content: '';
-    display: block;
-    width: 0;
-    height: 0;
-    border-left: 6px solid transparent;
-    border-right: 6px solid transparent;
-    border-top: 7px solid red;
-    transform: translate(-8px, -8px);
   }
 `
 
@@ -95,6 +78,7 @@ const Speech = ({ pokemon, content, yesNoControl }) => {
           </SpeechText>
         </Button>
       </Bubble>
+      <ChoiceBubble />
     </Wrapper>
   )
 }

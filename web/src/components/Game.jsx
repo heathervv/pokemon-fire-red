@@ -14,7 +14,7 @@ const Background = styled.div`
   height: 100%;
   background: url(${background}) no-repeat;
   background-size: cover;
-  opacity: 1;
+  opacity: ${props => props.visible ? 1 : 0};
   transition: opacity .4s cubic-bezier(0.895, 0.030, 0.685, 0.220);
   transition-delay: .5s;
 `
@@ -37,34 +37,34 @@ const Game = ({ turnGameboyOn, yesNoControl, arrowControl }) => {
       })
   }, [turnGameboyOn])
 
+  var gameOn = pokemonStarters.length > 0
+
   return (
-    <Background visible={pokemonStarters.length > 0}>
-      {
-        pokemonStarters.length > 0 &&
-        <>
-          <InteractiveSpace>
-            {
-              pokemonStarters.map((pokemon, i) => (
-                <Pokeball
-                  key={pokemon.id}
-                  pokemon={pokemon}
-                  order={i}
-                  choosePokemon={selectPokemon}
-                />
-              ))
-            }
-          </InteractiveSpace>
-          <Player move={arrowControl} />
+    <Background visible={gameOn}>
+        <InteractiveSpace>
           {
-            selectedPokemon &&
-            <Speech
-              pokemon={selectedPokemon}
-              content={choosingStarters}
-              yesNoControl={yesNoControl}
-            />
+            pokemonStarters.map((pokemon, i) => (
+              <Pokeball
+                key={pokemon.id}
+                pokemon={pokemon}
+                order={i}
+                choosePokemon={selectPokemon}
+              />
+            ))
           }
-        </>
-      }
+        </InteractiveSpace>
+        {
+          gameOn &&
+          <Player move={arrowControl} />
+        }
+        {
+          selectedPokemon &&
+          <Speech
+            pokemon={selectedPokemon}
+            content={choosingStarters}
+            yesNoControl={yesNoControl}
+          />
+        }
     </Background>
   )
 }
