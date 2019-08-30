@@ -1,4 +1,4 @@
-import { sprites } from '../../config'
+import { sprites } from './helpers/config'
 
 class Pokeball {
   constructor(pokemon, position) {

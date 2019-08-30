@@ -1,4 +1,6 @@
 import { objectsToDrawOnCanvas, drawToCanvas } from './canvasLogic'
+import Pokeball from '../Pokeball'
+
 import playerForward from'../../../images/person_forward.png'
 import playerBack from'../../../images/person_back.png'
 import playerRight from'../../../images/person_right.png'
@@ -61,7 +63,7 @@ const movePlayer = (canvas, context, direction) => {
       if (yNewPosition >= 0 && yNewPosition <= canvas.height - edgeBuffer && !collisionDetected(yNewPosition, newPosition.x)) {
         newPosition.y = yNewPosition
       }
-    break;
+    break
     case 'LEFT':
     case 'RIGHT':
       const xDirectionalMove = PLAYER[direction].move * moveAmount
@@ -70,10 +72,10 @@ const movePlayer = (canvas, context, direction) => {
       if (xNewPosition >= 0 && xNewPosition <= canvas.width - edgeBuffer && !collisionDetected(newPosition.y, xNewPosition)) {
         newPosition.x = xNewPosition
       }
-    break;
+    break
     default:
-      console.log('Direction not handled.')
-    break;
+      console.log('Direction not supported.')
+    break
   }
 
   drawToCanvas(
@@ -82,6 +84,30 @@ const movePlayer = (canvas, context, direction) => {
   )
 
   playerPosition = { ...newPosition }
+}
+
+const interactWithGame = (canvas, context, button, selectPokemon) => {
+  switch(button) {
+    case 'A':
+      const starters = objectsToDrawOnCanvas.filter(object => object instanceof Pokeball)
+
+      for (let i = 0; i < starters.length; i += 1) {
+          if (
+            playerPosition.x > starters[i].x - 10
+            && playerPosition.x < starters[i].x + 10
+            && playerPosition.y === starters[i].y + 31
+          ) {
+            selectPokemon(starters[i].pokemon)
+          }
+      }
+    break
+    case 'B':
+      // TODO - hook control up.
+    break
+    default:
+      console.log('Button not supported.');
+    break
+  }
 }
 
 const collisionDetected = (playerYPosition, playerXPosition) => {
@@ -109,5 +135,6 @@ const collisionDetected = (playerYPosition, playerXPosition) => {
 
 export {
   initializeGame,
-  movePlayer
+  movePlayer,
+  interactWithGame
 }

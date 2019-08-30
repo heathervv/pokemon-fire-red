@@ -3,10 +3,12 @@ import PropTypes from 'prop-types'
 import styled from '@emotion/styled'
 
 import { canvas } from './helpers/config'
-import { initializeGame, movePlayer } from './helpers/gameLogic'
+import { initializeGame, movePlayer, interactWithGame } from './helpers/gameLogic'
 import Pokeball from './Pokeball'
+import Speech from './Speech'
 
 import { getStarters } from '../../apiClient'
+import { choosingStarters } from './helpers/content'
 
 import background from '../../images/lab_inside.jpg'
 
@@ -23,6 +25,7 @@ class Game extends PureComponent {
     super()
 
     this.state = {
+      selectedPokemon: null,
       pokemonStarters: []
     }
 
@@ -41,6 +44,8 @@ class Game extends PureComponent {
       { x: 0, y: 63, width: 17, height: 48 },
       { x: 22, y: 80, width: 42, height: 53 },
     ]
+
+    this.selectPokemon = this.selectPokemon.bind(this)
   }
 
   componentDidMount() {
@@ -62,30 +67,54 @@ class Game extends PureComponent {
   }
 
   componentDidUpdate(prevProps) {
-    const { arrowControl } = this.props
+    const { arrowControl, yesNoControl } = this.props
+    const { selectedPokemon } = this.state
     const ctx = this.canvas.ref.current.getContext('2d')
 
-    if (prevProps.arrowControl !== arrowControl) {
+    if (prevProps.arrowControl !== arrowControl && !selectedPokemon) {
       movePlayer(this.canvas, ctx, arrowControl.direction)
+    }
+
+    if (prevProps.yesNoControl !== yesNoControl && !selectedPokemon) {
+      interactWithGame(this.canvas, ctx, yesNoControl.button, this.selectPokemon)
     }
   }
 
+  selectPokemon = (pokemonId) => {
+    const selectedPokemon = this.state.pokemonStarters.find(pokemon => pokemon.id === pokemonId)
+
+    this.setState({ selectedPokemon })
+  }
+
   render() {
-    const { pokemonStarters } = this.state
+    const { pokemonStarters, selectedPokemon } = this.state
+    const { arrowControl, yesNoControl } = this.props
 
     return (
-      <Canvas
-        visible={pokemonStarters.length > 0}
-        ref={this.canvas.ref}
-        width={canvas.width}
-        height={canvas.height}
-      />
+      <>
+        <Canvas
+          visible={pokemonStarters.length > 0}
+          ref={this.canvas.ref}
+          width={canvas.width}
+          height={canvas.height}
+        />
+        {
+          selectedPokemon &&
+          <Speech
+            pokemon={selectedPokemon}
+            content={choosingStarters}
+            yesNoControl={yesNoControl}
+            arrowControl={arrowControl}
+          />
+        }
+      </>
     )
   }
 }
 
 Game.propTypes = {
   arrowControl: PropTypes.object.isRequired,
+  yesNoControl: PropTypes.object.isRequired,
   turnGameboyOn: PropTypes.func.isRequired
 }
 

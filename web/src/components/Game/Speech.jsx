@@ -8,11 +8,13 @@ import {
   SpeechText,
   Arrow,
   BorderedBox
-} from './global'
-import { replaceString, wrapEveryLetter } from '../helpers'
+} from '../global'
+import { replaceString, wrapEveryLetter } from '../../stringHelpers'
 
 const Wrapper = styled.div`
   position: absolute;
+  top: 0;
+  left: 0;
   z-index: 1;
   width: 100%;
   height: 100%;
@@ -89,7 +91,8 @@ Speech.propTypes = {
     name: PropTypes.string.isRequired
   }).isRequired,
   content: PropTypes.func.isRequired,
-  yesNoControl: PropTypes.bool
+  arrowControl: PropTypes.object.isRequired,
+  yesNoControl: PropTypes.object.isRequired
 }
 
 export default Speech

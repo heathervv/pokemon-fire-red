@@ -91,8 +91,8 @@ class Controls extends Component {
     this.rightArrow = React.createRef()
 
     this.KEY_VALUES = {
-      65: this.aButton,
-      66: this.bButton,
+      65: [this.aButton, 'A'],
+      66: [this.bButton, 'B'],
       38: [this.upArrow, 'UP'],
       40: [this.downArrow, 'DOWN'],
       37: [this.leftArrow, 'LEFT'],
@@ -105,16 +105,14 @@ class Controls extends Component {
       const keyCode = event.keyCode.toString()
 
       if (Object.keys(this.KEY_VALUES).includes(keyCode)) {
-        if (this.KEY_VALUES[keyCode].length > 1) {
           this.triggerControl(this.KEY_VALUES[keyCode][0], this.KEY_VALUES[keyCode][1])
-        } else {
-          this.triggerControl(this.KEY_VALUES[keyCode])
-        }
       }
     })
   }
 
-  triggerControl = (ref, direction = null) => {
+  triggerControl = (ref, value = null) => {
+    const { yesNoClicked, arrowClicked } = this.props
+
     this.setState({ focusedElement: ref }, () => {
       setTimeout(() => {
         this.setState({ focusedElement: null })
@@ -122,11 +120,11 @@ class Controls extends Component {
     })
 
     if (ref === this.aButton || ref === this.bButton) {
-      this.props.setYesNoControl(ref === this.aButton)
+      this.props.setYesNoControl({ button: value, count: yesNoClicked + 1 })
     }
 
     if (ref !== this.aButton && ref !== this.bButton) {
-      this.props.setArrowControl({ direction, count: this.props.arrowControl.count += 1 })
+      this.props.setArrowControl({ direction: value, count: arrowClicked + 1 })
     }
   }
 
@@ -173,7 +171,8 @@ class Controls extends Component {
 Controls.propTypes = {
   setYesNoControl: PropTypes.func.isRequired,
   setArrowControl: PropTypes.func.isRequired,
-  arrowControl: PropTypes.object.isRequired
+  yesNoClicked: PropTypes.number.isRequired,
+  arrowClicked: PropTypes.number.isRequired
 }
 
 export default Controls;

@@ -7,7 +7,7 @@ import {
   SpeechText,
   Arrow,
   BorderedBox
-} from './global'
+} from '../global'
 
 const ChoiceWindow = styled(BorderedBox)`
   position: absolute;
