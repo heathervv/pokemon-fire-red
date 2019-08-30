@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import styled from '@emotion/styled'
-import Game from './Game'
-import GameAlt from './Game/index'
+import Game from './Game/index'
 import Screen from './Screen'
 import Controls from './Controls'
 import Grill from './Grill'
@@ -28,10 +27,16 @@ const Gameboy = () => {
   return (
     <GameBoy>
       <Screen power={active}>
-        <GameAlt arrowControl={arrowControl} />
-        <Game turnGameboyOn={setActive} yesNoControl={yesNoControl} arrowControl={arrowControl} />
+        <Game
+          turnGameboyOn={setActive}
+          arrowControl={arrowControl}
+        />
       </Screen>
-      <Controls setYesNoControl={setYesNoControl} setArrowControl={setArrowControl} arrowControl={arrowControl} />
+      <Controls
+        setYesNoControl={setYesNoControl}
+        setArrowControl={setArrowControl}
+        arrowControl={arrowControl}
+      />
       <Grill />
     </GameBoy>
   );
