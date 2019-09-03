@@ -32,30 +32,26 @@ const Box = styled.span`
 
 const ChoiceBubble = ({ active }) => (
   <ChoiceWindow>
-    <Button>
-      <SpeechText color="#606060" size="14">
-        {
-          active === 1 ? (
-            <Arrow rotate="true" color="#606060" />
-          ) : (
-            <Box />
-          )
-        }
-        <Paragraph>Yes</Paragraph>
-      </SpeechText>
-    </Button>
-    <Button>
-      <SpeechText color="#606060" size="14">
-        {
-          active === 2 ? (
-            <Arrow rotate="true" color="#606060" />
-          ) : (
-            <Box />
-          )
-        }
-        <Paragraph>No</Paragraph>
-      </SpeechText>
-    </Button>
+    <SpeechText color="#606060" size="14">
+      {
+        active === 0 ? (
+          <Arrow rotate="true" color="#606060" />
+        ) : (
+          <Box />
+        )
+      }
+      <Paragraph>Yes</Paragraph>
+    </SpeechText>
+    <SpeechText color="#606060" size="14">
+      {
+        active === 1 ? (
+          <Arrow rotate="true" color="#606060" />
+        ) : (
+          <Box />
+        )
+      }
+      <Paragraph>No</Paragraph>
+    </SpeechText>
   </ChoiceWindow>
   )
 
@@ -64,7 +60,7 @@ ChoiceBubble.propTypes = {
 }
 
 ChoiceBubble.defaultProps = {
-  active: 1
+  active: 0
 }
 
 export default ChoiceBubble

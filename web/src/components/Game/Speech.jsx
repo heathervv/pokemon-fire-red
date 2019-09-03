@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import styled from '@emotion/styled'
 import ChoiceBubble from './ChoiceBubble'
 import {
-  Button,
   Paragraph,
   SpeechText,
   Arrow,
@@ -46,43 +45,126 @@ const Bubble = styled.div`
   }
 `
 
-// TODO choice window
-// TODO success/failure speech
+class Speech extends PureComponent {
+  constructor(props) {
+    super(props)
 
-const Speech = ({ pokemon, content, yesNoControl }) => {
-  const [currentScreen, changeScreen] = useState(0)
-  const areThereAnyScreensLeft = Object.keys(content()).length > currentScreen + 1
-  const copy = replaceString(
-    content(pokemon.order)[currentScreen],
-    [
-      { a: '{{POKEMON_NAME}}', b: pokemon.name },
-      { a: '{{POKEMON_TYPE}}', b: pokemon.types[1] }
-    ]
-  )
-
-  const triggerCopyChange = useCallback((forceChange) => {
-    if (yesNoControl || forceChange) {
-      changeScreen(areThereAnyScreensLeft ? currentScreen + 1 : currentScreen)
+    this.state = {
+      currentScreen: 0,
+      copy: this.generateCopy(0, props.content, props.pokemon),
+      activeChoice: 0
     }
-  }, [areThereAnyScreensLeft, currentScreen, yesNoControl])
 
-  useEffect(() => {
-    triggerCopyChange(yesNoControl)
-  }, [triggerCopyChange, yesNoControl])
+    this.RespondToButtonClick = this.RespondToButtonClick.bind(this)
+    this.respondToArrowClick = this.respondToArrowClick.bind(this)
+  }
 
-  return (
-    <Wrapper>
-      <Image sprite={pokemon.sprite} />
-      <Bubble>
-        <Button onClick={() => triggerCopyChange(true)}>
+  componentDidUpdate(prevProps, prevState) {
+    const { arrowControl, yesNoControl } = this.props
+    const { currentScreen } = this.state
+
+    if (prevProps.arrowControl !== arrowControl) {
+      this.respondToArrowClick(arrowControl)
+    }
+
+    if (prevProps.yesNoControl !== yesNoControl) {
+      this.RespondToButtonClick(yesNoControl)
+    }
+  }
+
+  generateCopy = (currentScreen, content, pokemon) => {
+    const selectedCopy = content(pokemon.order)[currentScreen]
+    return {
+      text: replaceString(
+        selectedCopy[0],
+        [
+          { a: '{{POKEMON_NAME}}', b: pokemon.name },
+          { a: '{{POKEMON_TYPE}}', b: pokemon.types[1] }
+        ]
+      ),
+      showChoiceBubble: selectedCopy[1]
+    }
+  }
+
+  RespondToButtonClick = (yesNoControl) => {
+    const { button } = yesNoControl
+
+    const { currentScreen, copy, activeChoice } = this.state
+    const { content, pokemon, deSelectPokemon } = this.props
+
+    let newCurrentScreen = currentScreen
+    let newCopy = copy
+
+    switch(button) {
+      case 'A':
+        const thereAreStillScreensToSee = currentScreen < Object.keys(content()).length - 1
+
+        if (thereAreStillScreensToSee) {
+          newCurrentScreen += 1
+          newCopy = this.generateCopy(newCurrentScreen, content, pokemon)
+        }
+
+        if (copy.showChoiceBubble) {
+          console.log('pokemon has been chosen:', activeChoice === 0);
+        }
+      break
+      case 'B':
+        if (copy.showChoiceBubble) {
+          newCurrentScreen = 0
+          newCopy = this.generateCopy(0, content, pokemon)
+          deSelectPokemon()
+        }
+      break
+      default:
+        console.log('Button not supported');
+      break
+    }
+
+      this.setState({ currentScreen: newCurrentScreen, copy: newCopy })
+  }
+
+  respondToArrowClick = (arrowControl) => {
+    const { direction } = arrowControl
+
+    const { copy, activeChoice } = this.state
+    let active = activeChoice
+
+    if (copy.showChoiceBubble) {
+      switch(direction) {
+        case 'UP':
+          active = active > 0 ? active - 1 : active
+        break
+        case 'DOWN':
+          active = active < 2 ? active + 1 : active
+        break
+        default:
+          console.log('Arrow not supported');
+        break
+      }
+    }
+
+    this.setState({ activeChoice: active })
+  }
+
+  render() {
+    const { pokemon } = this.props
+    const { currentScreen, copy, activeChoice } = this.state
+
+    return (
+      <Wrapper>
+        <Image sprite={pokemon.sprite} />
+        <Bubble>
           <SpeechText>
-            <Paragraph>{wrapEveryLetter(copy)} <Arrow delay={copy.length} key={currentScreen} /></Paragraph>
+            <Paragraph>{wrapEveryLetter(copy.text)} <Arrow delay={copy.text.length} key={currentScreen} /></Paragraph>
           </SpeechText>
-        </Button>
-      </Bubble>
-      <ChoiceBubble />
-    </Wrapper>
-  )
+        </Bubble>
+        {
+          copy.showChoiceBubble &&
+          <ChoiceBubble active={activeChoice} />
+        }
+      </Wrapper>
+    )
+  }
 }
 
 Speech.propTypes = {
@@ -92,7 +174,8 @@ Speech.propTypes = {
   }).isRequired,
   content: PropTypes.func.isRequired,
   arrowControl: PropTypes.object.isRequired,
-  yesNoControl: PropTypes.object.isRequired
+  yesNoControl: PropTypes.object.isRequired,
+  deSelectPokemon: PropTypes.func.isRequired
 }
 
 export default Speech

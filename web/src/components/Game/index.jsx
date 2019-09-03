@@ -103,6 +103,7 @@ class Game extends PureComponent {
           <Speech
             pokemon={selectedPokemon}
             content={choosingStarters}
+            deSelectPokemon={() => this.selectPokemon(null)}
             yesNoControl={yesNoControl}
             arrowControl={arrowControl}
           />
