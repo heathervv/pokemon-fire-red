@@ -1,10 +1,11 @@
 import { objectsToDrawOnCanvas, drawToCanvas } from './canvasLogic'
 import Pokeball from '../Pokeball'
 
-import playerForward from'../../../images/person_forward.png'
-import playerBack from'../../../images/person_back.png'
-import playerRight from'../../../images/person_right.png'
-import playerLeft from'../../../images/person_left.png'
+import playerForward from '../../../images/person_forward.png'
+import playerBack from '../../../images/person_back.png'
+import playerRight from '../../../images/person_right.png'
+import playerLeft from '../../../images/person_left.png'
+import professorOak from '../../../images/professor_oak.png'
 
 const spriteConfig = {
   imgWidth: 43,
@@ -42,6 +43,7 @@ const PLAYER = {
 const initializeGame = (context, direction, structures, starters) => {
   objectsToDrawOnCanvas.push(...structures)
   objectsToDrawOnCanvas.push(...starters)
+  objectsToDrawOnCanvas.push({ ...spriteConfig, x: 140, y: 80, img: professorOak })
 
   drawToCanvas(
     context,
