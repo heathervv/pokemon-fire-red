@@ -7,7 +7,7 @@ import { initializeGame, movePlayer, interactWithGame } from './helpers/gameLogi
 import Pokeball from './Pokeball'
 import Speech from './Speech'
 
-import { getStarters } from '../../apiClient'
+import { getStarters, chooseStarter } from '../../apiClient'
 import { choosingStarters } from './helpers/content'
 
 import background from '../../images/lab_inside.jpg'
@@ -25,8 +25,9 @@ class Game extends PureComponent {
     super()
 
     this.state = {
-      selectedPokemon: null,
-      pokemonStarters: []
+      pokemonStarters: [],
+      activePokemon: null,
+      chosenPokemon: null
     }
 
     this.canvas = {
@@ -45,7 +46,8 @@ class Game extends PureComponent {
       { x: 22, y: 80, width: 42, height: 53 },
     ]
 
-    this.selectPokemon = this.selectPokemon.bind(this)
+    this.viewPokemon = this.viewPokemon.bind(this)
+    this.choosePokemon = this.choosePokemon.bind(this)
   }
 
   componentDidMount() {
@@ -68,26 +70,33 @@ class Game extends PureComponent {
 
   componentDidUpdate(prevProps) {
     const { arrowControl, yesNoControl } = this.props
-    const { selectedPokemon } = this.state
+    const { activePokemon } = this.state
     const ctx = this.canvas.ref.current.getContext('2d')
 
-    if (prevProps.arrowControl !== arrowControl && !selectedPokemon) {
+    if (prevProps.arrowControl !== arrowControl && !activePokemon) {
       movePlayer(this.canvas, ctx, arrowControl.direction)
     }
 
-    if (prevProps.yesNoControl !== yesNoControl && !selectedPokemon) {
-      interactWithGame(this.canvas, ctx, yesNoControl.button, this.selectPokemon)
+    if (prevProps.yesNoControl !== yesNoControl && !activePokemon) {
+      interactWithGame(this.canvas, ctx, yesNoControl.button, this.viewPokemon)
     }
   }
 
-  selectPokemon = (pokemonId) => {
-    const selectedPokemon = this.state.pokemonStarters.find(pokemon => pokemon.id === pokemonId)
+  viewPokemon = (pokemonId) => {
+    const activePokemon = this.state.pokemonStarters.find(pokemon => pokemon.id === pokemonId)
 
-    this.setState({ selectedPokemon })
+    this.setState({ activePokemon })
+  }
+
+  choosePokemon = (pokemon) => {
+    chooseStarter({ pokemon })
+      .then((response) => {
+        this.setState({ chosenPokemon: response })
+      })
   }
 
   render() {
-    const { pokemonStarters, selectedPokemon } = this.state
+    const { pokemonStarters, activePokemon } = this.state
     const { arrowControl, yesNoControl } = this.props
 
     return (
@@ -99,13 +108,14 @@ class Game extends PureComponent {
           height={canvas.height}
         />
         {
-          selectedPokemon &&
+          activePokemon &&
           <Speech
-            pokemon={selectedPokemon}
+            pokemon={activePokemon}
             content={choosingStarters}
-            deSelectPokemon={() => this.selectPokemon(null)}
             yesNoControl={yesNoControl}
             arrowControl={arrowControl}
+            deViewPokemon={() => this.viewPokemon(null)}
+            choosePokemon={this.choosePokemon}
           />
         }
       </>

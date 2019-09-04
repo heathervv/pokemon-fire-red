@@ -7,6 +7,19 @@ const getStarters = async () => {
     })
 }
 
+const chooseStarter = async (pokemon) => {
+  return await fetch('api/pokemon/starter', {
+    method: 'POST',
+    body: JSON.stringify(pokemon)
+  })
+    .then(data => data.json())
+    .then((response) => response)
+    .catch((error) => {
+      throw error
+    })
+}
+
 export {
-  getStarters
+  getStarters,
+  chooseStarter
 }

@@ -61,7 +61,6 @@ class Speech extends PureComponent {
 
   componentDidUpdate(prevProps, prevState) {
     const { arrowControl, yesNoControl } = this.props
-    const { currentScreen } = this.state
 
     if (prevProps.arrowControl !== arrowControl) {
       this.respondToArrowClick(arrowControl)
@@ -90,29 +89,33 @@ class Speech extends PureComponent {
     const { button } = yesNoControl
 
     const { currentScreen, copy, activeChoice } = this.state
-    const { content, pokemon, deSelectPokemon } = this.props
+    const { content, pokemon, deViewPokemon, choosePokemon } = this.props
 
     let newCurrentScreen = currentScreen
     let newCopy = copy
+
+    const nextScreen = (index) => {
+      newCurrentScreen = index
+      newCopy = this.generateCopy(index, content, pokemon)
+
+      if (index === 0) deViewPokemon()
+    }
 
     switch(button) {
       case 'A':
         const thereAreStillScreensToSee = currentScreen < Object.keys(content()).length - 1
 
-        if (thereAreStillScreensToSee) {
-          newCurrentScreen += 1
-          newCopy = this.generateCopy(newCurrentScreen, content, pokemon)
-        }
+        if (copy.showChoiceBubble && activeChoice === 0) choosePokemon(pokemon)
 
-        if (copy.showChoiceBubble) {
-          console.log('pokemon has been chosen:', activeChoice === 0);
+        if ((copy.showChoiceBubble && activeChoice !== 0) || !thereAreStillScreensToSee) {
+          nextScreen(0)
+        } else if (thereAreStillScreensToSee) {
+          nextScreen(newCurrentScreen + 1)
         }
       break
       case 'B':
         if (copy.showChoiceBubble) {
-          newCurrentScreen = 0
-          newCopy = this.generateCopy(0, content, pokemon)
-          deSelectPokemon()
+          nextScreen(0)
         }
       break
       default:
@@ -147,15 +150,17 @@ class Speech extends PureComponent {
   }
 
   render() {
-    const { pokemon } = this.props
+    const { pokemon, content } = this.props
     const { currentScreen, copy, activeChoice } = this.state
+
+    const thereAreStillScreensToSee = currentScreen < Object.keys(content()).length - 1
 
     return (
       <Wrapper>
         <Image sprite={pokemon.sprite} />
         <Bubble>
           <SpeechText>
-            <Paragraph>{wrapEveryLetter(copy.text)} <Arrow delay={copy.text.length} key={currentScreen} /></Paragraph>
+            <Paragraph>{wrapEveryLetter(copy.text)} { thereAreStillScreensToSee && <Arrow delay={copy.text.length} key={currentScreen} /> }</Paragraph>
           </SpeechText>
         </Bubble>
         {
@@ -175,7 +180,8 @@ Speech.propTypes = {
   content: PropTypes.func.isRequired,
   arrowControl: PropTypes.object.isRequired,
   yesNoControl: PropTypes.object.isRequired,
-  deSelectPokemon: PropTypes.func.isRequired
+  deViewPokemon: PropTypes.func.isRequired,
+  choosePokemon: PropTypes.func.isRequired
 }
 
 export default Speech
