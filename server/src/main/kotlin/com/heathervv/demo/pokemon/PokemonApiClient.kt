@@ -1,4 +1,4 @@
-package com.heathervv.demo
+package com.heathervv.demo.pokemon
 
 import com.fasterxml.jackson.databind.JsonNode
 import org.springframework.http.HttpEntity
@@ -8,8 +8,9 @@ import org.springframework.stereotype.Component
 import org.springframework.web.client.RestTemplate
 
 @Component
-class PokemonApiClient {
-    private val restTemplate = RestTemplate()
+class PokemonApiClient(
+    private val restTemplate: RestTemplate
+) {
 
     fun getPokemon(
             userAgent: String,

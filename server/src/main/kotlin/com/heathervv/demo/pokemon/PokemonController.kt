@@ -1,4 +1,4 @@
-package com.heathervv.demo
+package com.heathervv.demo.pokemon
 
 import org.springframework.web.bind.annotation.*
 

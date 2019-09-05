@@ -1,4 +1,4 @@
-package com.heathervv.demo
+package com.heathervv.demo.pokemon
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
