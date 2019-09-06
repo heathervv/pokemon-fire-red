@@ -8,6 +8,6 @@ enum class Pokedex(val id: Int) {
     CHARMELEON(5),
     CHARIZARD(6),
     SQUIRTLE(7),
-    WARTORTLE(7),
-    BLASTOISE(7)
+    WARTORTLE(8),
+    BLASTOISE(9)
 }

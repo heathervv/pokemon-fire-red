@@ -3,8 +3,6 @@ package com.heathervv.pokemon.api
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.JsonNode
 
-//TODO refactor companion object
-
 data class PokemonResponse(
     @JsonProperty("id")
     val id: Int,
@@ -28,56 +26,59 @@ data class PokemonResponse(
     val moves: List<PokemonMoveResponse>
 ) {
     companion object {
-        private val gameVersion = "firered-leafgreen"
-        private val moveLevelType = "level-up"
-
         fun converter(response: JsonNode): PokemonResponse {
-            val id = Integer.parseInt(response.get("id").toString())
-            val name = response.get("name").textValue()
-            val baseXP = Integer.parseInt(response.get("base_experience").toString())
-            val sprite = response.get("sprites").get("front_default").textValue()
 
-            val types = sortedMapOf<Int, String>()
+            val pokemonId = turnJsonNodeToInt(response.get("id"))
+            val pokemonName = grabTextValueFromJsonNode(response.get("name"))
+            val pokemonBaseXP = turnJsonNodeToInt(response.get("base_experience"))
+            val pokemonSprite = grabTextValueFromJsonNode(response.get("sprites").get("front_default"))
+            val pokemonTypes = sortedMapOf<Int, String>()
+            val pokemonBaseStats = mutableListOf<PokemonBaseStatResponse>()
+            val pokemonMoves = mutableListOf<PokemonMoveResponse>()
+
             response.get("types").forEach{ type ->
-                val slot = Integer.parseInt(type.get("slot").toString())
-                val typeName = type.get("type").get("name").textValue()
+                val slot = turnJsonNodeToInt(type.get("slot"))
+                val name = grabTextValueFromJsonNode(type.get("type").get("name"))
 
-                types[slot] = typeName
+                pokemonTypes[slot] = name
             }
 
-            val baseStats = mutableListOf<PokemonBaseStatResponse>()
             response.get("stats").forEach{ stat ->
-                val statName = stat.get("stat").get("name").textValue()
-                val value = Integer.parseInt(stat.get("base_stat").toString())
+                val name = grabTextValueFromJsonNode(stat.get("stat").get("name"))
+                val value = turnJsonNodeToInt(stat.get("base_stat"))
 
-                baseStats.add(
-                        PokemonBaseStatResponse(statName, value)
-                )
+                pokemonBaseStats.add( PokemonBaseStatResponse(name, value) )
             }
 
-            val moves = mutableListOf<PokemonMoveResponse>()
             response.get("moves").forEach { move ->
                 move.get("version_group_details").forEach { version ->
-                    val versionName = version.get("version_group").get("name").textValue()
-                    val moveLearnedMethod = version.get("move_learn_method").get("name").textValue()
-                    val levelLearnedAt = Integer.parseInt(version.get("level_learned_at").toString())
+                    val gameVersion = "firered-leafgreen"
+                    val moveLevelType = "level-up"
 
-                    if (
-                        versionName == gameVersion
-                        && moveLearnedMethod == moveLevelType
-                        && levelLearnedAt == 1
-                    ) {
-                        val moveName = move.get("move").get("name").textValue()
-                        val url = move.get("move").get("url").textValue()
+                    val versionName = grabTextValueFromJsonNode(version.get("version_group").get("name"))
+                    val moveLearnedMethod = grabTextValueFromJsonNode(version.get("move_learn_method").get("name"))
+                    val levelLearnedAt = turnJsonNodeToInt(version.get("level_learned_at"))
 
-                        moves.add(
-                                PokemonMoveResponse(levelLearnedAt, moveName, url)
-                        )
+                    if (versionName == gameVersion && moveLearnedMethod == moveLevelType && levelLearnedAt == 1) {
+                        val name = grabTextValueFromJsonNode(move.get("move").get("name"))
+                        val url = grabTextValueFromJsonNode(move.get("move").get("url"))
+
+                        pokemonMoves.add( PokemonMoveResponse(levelLearnedAt, name, url) )
                     }
                 }
             }
 
-            return PokemonResponse(id, name, baseXP, sprite, types, baseStats, moves)
+            return PokemonResponse(pokemonId, pokemonName, pokemonBaseXP, pokemonSprite, pokemonTypes, pokemonBaseStats, pokemonMoves)
+        }
+
+        private fun grabTextValueFromJsonNode(field: JsonNode): String {
+            return field.textValue()
+        }
+
+        private fun turnJsonNodeToInt(field: JsonNode): Int {
+            val string = field.toString()
+
+            return Integer.parseInt(string)
         }
     }
 }
