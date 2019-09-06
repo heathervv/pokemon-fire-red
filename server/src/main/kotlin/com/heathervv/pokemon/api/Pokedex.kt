@@ -1,4 +1,4 @@
-package com.heathervv.demo.pokemon
+package com.heathervv.pokemon.api
 
 enum class Pokedex(val id: Int) {
     BULBASAUR(1),

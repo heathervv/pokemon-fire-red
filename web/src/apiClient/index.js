@@ -1,9 +1,18 @@
+const theRequestFailed = (status) => {
+  if (status >= 400 && status <= 500) {
+    return true
+  }
+
+  return false
+}
+
 const getStarters = async () => {
   return await fetch('api/pokemon/starter')
     .then(data => data.json())
-    .then((response) => response)
-    .catch((error) => {
-      throw error
+    .then((response) => {
+      if (theRequestFailed(response.status)) return []
+
+      return response
     })
 }
 
@@ -13,9 +22,10 @@ const chooseStarter = async (pokemon) => {
     body: JSON.stringify(pokemon)
   })
     .then(data => data.json())
-    .then((response) => response)
-    .catch((error) => {
-      throw error
+    .then((response) => {
+      if (theRequestFailed(response.status)) return []
+
+      return response
     })
 }
 

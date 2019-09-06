@@ -1,11 +1,11 @@
-package com.heathervv.demo
+package com.heathervv.pokemon
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
-class DemoApplication
+class Application
 
 fun main(args: Array<String>) {
-    runApplication<DemoApplication>(*args)
+    runApplication<Application>(*args)
 }

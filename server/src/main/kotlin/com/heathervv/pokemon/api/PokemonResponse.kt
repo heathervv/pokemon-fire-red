@@ -1,9 +1,10 @@
-package com.heathervv.demo.pokemon
+package com.heathervv.pokemon.api
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.JsonNode
 
-//TODO clean up all the vals to be less gross
+//TODO refactor companion object
+
 data class PokemonResponse(
     @JsonProperty("id")
     val id: Int,

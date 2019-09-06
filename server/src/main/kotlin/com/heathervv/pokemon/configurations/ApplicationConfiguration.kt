@@ -1,4 +1,4 @@
-package com.heathervv.demo.configurations
+package com.heathervv.pokemon.configurations
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
