@@ -24,6 +24,10 @@ class PokemonApiClient(
 
         val request = restTemplate.exchange(url, HttpMethod.GET, HttpEntity<String>(headers), JsonNode::class.java)
 
-        return PokemonResponse.converter(request.body)
+        if (request.body == null) {
+            throw Exception()
+        }
+
+        return PokemonResponse.converter(request.body!!)
     }
 }
