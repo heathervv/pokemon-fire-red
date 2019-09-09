@@ -4,6 +4,7 @@ import styled from '@emotion/styled'
 
 import { canvas } from './helpers/config'
 import { initializeGame, movePlayer, interactWithGame } from './helpers/gameLogic'
+import Start from './Start'
 import Pokeball from './Pokeball'
 import Speech from './Speech'
 
@@ -25,6 +26,7 @@ class Game extends PureComponent {
     super()
 
     this.state = {
+      gameHasBeenStarted: false,
       pokemonStarters: [],
       activePokemon: null,
       chosenPokemon: null
@@ -46,32 +48,25 @@ class Game extends PureComponent {
       { x: 22, y: 80, width: 42, height: 53 },
     ]
 
+    this.loadGame = this.loadGame.bind(this)
     this.viewPokemon = this.viewPokemon.bind(this)
     this.choosePokemon = this.choosePokemon.bind(this)
   }
 
   componentDidMount() {
-    const { arrowControl, turnGameboyOn } = this.props
-    const ctx = this.canvas.ref.current.getContext('2d')
+    const { turnGameboyOn } = this.props
 
-    getStarters()
-      .then((response) => {
-        this.setState({ pokemonStarters: response }, () => {
-          const starters = response.map((pokemon, i) => {
-            const xAxis = 20 * i
-            return new Pokeball(pokemon, { x: 185 + xAxis, y: 99 })
-          })
-
-          initializeGame(ctx, arrowControl.direction, this.structures, starters)
-          turnGameboyOn(true)
-        })
-      })
+    turnGameboyOn(true)
   }
 
   componentDidUpdate(prevProps) {
-    const { arrowControl, yesNoControl } = this.props
+    const { arrowControl, yesNoControl, startControl } = this.props
     const { activePokemon } = this.state
     const ctx = this.canvas.ref.current.getContext('2d')
+
+    if (prevProps.startControl !== startControl) {
+      this.loadGame()
+    }
 
     if (prevProps.arrowControl !== arrowControl && !activePokemon) {
       movePlayer(this.canvas, ctx, arrowControl.direction)
@@ -80,6 +75,26 @@ class Game extends PureComponent {
     if (prevProps.yesNoControl !== yesNoControl && !activePokemon) {
       interactWithGame(this.canvas, ctx, yesNoControl.button, this.viewPokemon)
     }
+  }
+
+  loadGame = () => {
+    const { arrowControl } = this.props
+    const ctx = this.canvas.ref.current.getContext('2d')
+
+    getStarters()
+      .then((response) => {
+        this.setState({
+          gameHasBeenStarted: true,
+          pokemonStarters: response
+        }, () => {
+          const starters = response.map((pokemon, i) => {
+            const xAxis = 20 * i
+            return new Pokeball(pokemon, { x: 185 + xAxis, y: 99 })
+          })
+
+          initializeGame(ctx, arrowControl.direction, this.structures, starters)
+        })
+      })
   }
 
   viewPokemon = (pokemonId) => {
@@ -96,11 +111,12 @@ class Game extends PureComponent {
   }
 
   render() {
-    const { pokemonStarters, activePokemon } = this.state
+    const { pokemonStarters, activePokemon, gameHasBeenStarted } = this.state
     const { arrowControl, yesNoControl } = this.props
 
     return (
       <>
+        { !gameHasBeenStarted && <Start /> }
         <Canvas
           visible={pokemonStarters.length > 0}
           ref={this.canvas.ref}
@@ -124,9 +140,14 @@ class Game extends PureComponent {
 }
 
 Game.propTypes = {
+  turnGameboyOn: PropTypes.func.isRequired,
   arrowControl: PropTypes.object.isRequired,
   yesNoControl: PropTypes.object.isRequired,
-  turnGameboyOn: PropTypes.func.isRequired
+  startControl: PropTypes.bool
+}
+
+Game.defautProps = {
+  startControl: false
 }
 
 export default Game

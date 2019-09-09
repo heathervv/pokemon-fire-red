@@ -31,8 +31,18 @@ const ScreenWindow = styled.div`
   height: 70%;
   background: #999;
   border-radius: 3px;
-  box-shadow: inset 13px 14px 5px -10px rgba(0,0,0,0.4);
   overflow: hidden;
+`
+
+const InsetShadow = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  box-shadow: inset 13px 14px 5px -10px rgba(0,0,0,0.4);
+  pointer-events: none;
+  z-index: 1;
 `
 
 const Power = styled.div`
@@ -51,6 +61,7 @@ const Screen = ({ children, power }) => (
     <ScreenGlass>
       <Power on={power} />
       <ScreenWindow>
+        <InsetShadow />
         {children}
       </ScreenWindow>
       <Logo />

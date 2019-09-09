@@ -89,6 +89,7 @@ class Controls extends Component {
     this.downArrow = React.createRef()
     this.leftArrow = React.createRef()
     this.rightArrow = React.createRef()
+    this.startButton = React.createRef()
 
     this.KEY_VALUES = {
       65: [this.aButton, 'A'],
@@ -119,11 +120,15 @@ class Controls extends Component {
       }, 100)
     })
 
+    if (ref === this.startButton) {
+      this.props.setStartControl(true)
+    }
+
     if (ref === this.aButton || ref === this.bButton) {
       this.props.setYesNoControl({ button: value, count: yesNoClicked + 1 })
     }
 
-    if (ref !== this.aButton && ref !== this.bButton) {
+    if (ref !== this.aButton && ref !== this.bButton && ref !== this.startButton) {
       this.props.setArrowControl({ direction: value, count: arrowClicked + 1 })
     }
   }
@@ -162,7 +167,12 @@ class Controls extends Component {
           B
         </Button>
         <Pill text="Select" left={38} />
-        <Pill text="Start" left={53} />
+        <Pill
+          text="Start"
+          left={53}
+          ref={this.startButton}
+          onClick={() => this.triggerControl(this.startButton)}
+        />
       </Wrapper>
     )
   }
@@ -171,6 +181,7 @@ class Controls extends Component {
 Controls.propTypes = {
   setYesNoControl: PropTypes.func.isRequired,
   setArrowControl: PropTypes.func.isRequired,
+  setStartControl: PropTypes.func.isRequired,
   yesNoClicked: PropTypes.number.isRequired,
   arrowClicked: PropTypes.number.isRequired
 }

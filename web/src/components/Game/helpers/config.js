@@ -1,4 +1,4 @@
-const sprites = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites"
+const sprites = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites'
 
 const canvas = {
   width: 295,

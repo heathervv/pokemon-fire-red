@@ -23,6 +23,7 @@ const Gameboy = () => {
   const [active, setActive] = useState(false)
   const [yesNoControl, setYesNoControl] = useState({ button: null, count: 0 })
   const [arrowControl, setArrowControl] = useState({ direction: 'UP', count: 0})
+  const [startControl, setStartControl] = useState(null)
 
   return (
     <GameBoy>
@@ -31,11 +32,13 @@ const Gameboy = () => {
           turnGameboyOn={setActive}
           arrowControl={arrowControl}
           yesNoControl={yesNoControl}
+          startControl={startControl}
         />
       </Screen>
       <Controls
         setYesNoControl={setYesNoControl}
         setArrowControl={setArrowControl}
+        setStartControl={setStartControl}
         yesNoClicked={yesNoControl.count}
         arrowClicked={arrowControl.count}
       />
