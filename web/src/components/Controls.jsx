@@ -150,7 +150,7 @@ class Controls extends Component {
         />
         <Button
           ref={this.aButton}
-          onClick={() => this.triggerControl(this.aButton)}
+          onClick={() => this.triggerControl(...this.KEY_VALUES[65])}
           top={7}
           right={11}
           className={focusedElement === this.aButton ? 'focus' : ''}
@@ -159,7 +159,7 @@ class Controls extends Component {
         </Button>
         <Button
           ref={this.bButton}
-          onClick={() => this.triggerControl(this.bButton)}
+          onClick={() => this.triggerControl(...this.KEY_VALUES[66])}
           top={24}
           right={27}
           className={focusedElement === this.bButton ? 'focus' : ''}

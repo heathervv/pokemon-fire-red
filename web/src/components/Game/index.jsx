@@ -13,6 +13,10 @@ import { choosingStarters } from './helpers/content'
 
 import background from '../../images/lab_inside.jpg'
 
+const Wrapper = styled.div`
+  background: #fff;
+`
+
 const Canvas = styled.canvas`
   background: url(${background}) no-repeat;
   background-size: cover;
@@ -115,7 +119,7 @@ class Game extends PureComponent {
     const { arrowControl, yesNoControl } = this.props
 
     return (
-      <>
+      <Wrapper>
         { !gameHasBeenStarted && <Start /> }
         <Canvas
           visible={pokemonStarters.length > 0}
@@ -134,7 +138,7 @@ class Game extends PureComponent {
             choosePokemon={this.choosePokemon}
           />
         }
-      </>
+      </Wrapper>
     )
   }
 }

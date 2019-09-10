@@ -7,6 +7,9 @@ import logoAsset from '../../images/pokemon_logo.png'
 import playerAsset from '../../images/player_start_sprite.png'
 
 const Wrapper = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   background: #FDE5F7;
@@ -38,8 +41,17 @@ const Player = styled.img`
 `
 
 const blinker = keyframes`
-  50% {
+  33% {
+    opacity: 1;
+  }
+  34% {
     opacity: 0;
+  }
+  66% {
+    opacity: 0;
+  }
+  67% {
+    opacity: 1;
   }
 `
 
