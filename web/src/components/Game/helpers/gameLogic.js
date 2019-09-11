@@ -1,19 +1,17 @@
 import { objectsToDrawOnCanvas, drawToCanvas } from './canvasLogic'
 import Pokeball from '../Pokeball'
 
-import playerForward from '../../../images/person_forward.png'
-import playerBack from '../../../images/person_back.png'
-import playerRight from '../../../images/person_right.png'
-import playerLeft from '../../../images/person_left.png'
-import professorOak from '../../../images/professor_oak.png'
+import spriteProfOak from '../../../images/sprite_prof_oak.png'
+import spritePlayer from '../../../images/sprite_player.png'
 
+const spriteXAnimation = 24
 const spriteConfig = {
-  imgWidth: 43,
-  imgHeight: 55,
-  imgX: 0,
-  imgY: 0,
-  width: 12,
-  height: 15
+  imgWidth: 15,
+  imgHeight: 19,
+  imgX: 24, // 0, 24, 48
+  imgY: 0, // 0, 21, 42, 63
+  width: 15,
+  height: 19
 }
 
 let playerPosition = {
@@ -23,19 +21,19 @@ let playerPosition = {
 
 const PLAYER = {
   UP: {
-    sprite: playerForward,
+    sprite: 63,
     move: -1
   },
   DOWN: {
-    sprite: playerBack,
+    sprite: 0,
     move: 1
   },
   LEFT: {
-    sprite: playerLeft,
+    sprite: 21,
     move: -1
   },
   RIGHT: {
-    sprite: playerRight,
+    sprite: 42,
     move: 1
   }
 }
@@ -43,11 +41,11 @@ const PLAYER = {
 const initializeGame = (context, direction, structures, starters) => {
   objectsToDrawOnCanvas.push(...structures)
   objectsToDrawOnCanvas.push(...starters)
-  objectsToDrawOnCanvas.push({ ...spriteConfig, x: 140, y: 80, img: professorOak })
+  objectsToDrawOnCanvas.push({ ...spriteConfig, x: 140, y: 80, img: spriteProfOak })
 
   drawToCanvas(
     context,
-    [ PLAYER[direction].sprite, { ...spriteConfig, ...playerPosition} ]
+    [ spritePlayer, { ...spriteConfig, ...playerPosition, imgY: PLAYER.UP.sprite} ]
   )
 }
 
@@ -82,7 +80,7 @@ const movePlayer = (canvas, context, direction) => {
 
   drawToCanvas(
     context,
-    [ PLAYER[direction].sprite, { ...spriteConfig, ...newPosition} ]
+    [ spritePlayer, { ...spriteConfig, ...newPosition, imgY: PLAYER[direction].sprite} ]
   )
 
   playerPosition = { ...newPosition }

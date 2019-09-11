@@ -4,7 +4,7 @@ import { keyframes } from '@emotion/core'
 import { SpeechText } from '../global'
 
 import logoAsset from '../../images/pokemon_logo.png'
-import playerAsset from '../../images/player_start_sprite.png'
+import playerAsset from '../../images/start_player.png'
 
 const Wrapper = styled.div`
   position: absolute;
